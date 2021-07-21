@@ -47,7 +47,7 @@ class PostTypes
             'public'             => true,
             'publicly_queryable' => true,
             'show_ui'            => true,
-            'show_in_menu'       => 'my-polls',
+            'show_in_menu'       => true,
             'query_var'          => true,
             'rewrite'            => ['poll'],
             'capability_type'    => 'post',
