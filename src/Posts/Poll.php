@@ -99,9 +99,4 @@ class Poll extends Post
 
         return $this->updateField('results', $results);
     }
-
-    public function isAnonymous()
-    {
-        return $this->getField('anonymous') ? true : false;
-    }
 }
