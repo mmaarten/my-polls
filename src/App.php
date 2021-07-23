@@ -67,6 +67,7 @@ class App
             case 'poll':
                 $poll = new Poll($post_id);
                 $poll->setInvitees([]);
+                $poll->setItems([]);
                 break;
             case 'poll_invitee':
                 // remove votes
