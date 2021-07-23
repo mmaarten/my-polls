@@ -27,6 +27,7 @@ class App
 
         add_action('init', [__CLASS__, 'loadTextdomain'], 0);
         add_action('acf/save_post', [__CLASS__, 'savePost']);
+        add_action('before_delete_post', [__CLASS__, 'deletePost']);
 
         add_filter('acf/load_value/key=my_polls_poll_invitees_field', [__CLASS__, 'populateInviteesField'], 10, 3);
         add_filter('acf/load_value/key=my_polls_poll_items_field', [__CLASS__, 'populateItemsField'], 10, 3);
@@ -56,6 +57,22 @@ class App
                 $poll->setItems($items);
                 $poll->deleteField('items');
 
+                break;
+        }
+    }
+
+    public static function deletePost($post_id)
+    {
+        switch (get_post_type($post_id)) {
+            case 'poll':
+                $poll = new Poll($post_id);
+                $poll->setInvitees([]);
+                break;
+            case 'poll_invitee':
+                // remove votes
+                break;
+            case 'poll_item':
+                // remove votes
                 break;
         }
     }
