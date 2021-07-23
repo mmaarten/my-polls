@@ -10,11 +10,48 @@ class Result
     public static function init()
     {
         add_action('add_meta_boxes', [__CLASS__, 'addMetaBoxes']);
+        add_action('admin_enqueue_scripts', [__CLASS__, 'enqueueAssets']);
+        add_action('wp_enqueue_scripts', [__CLASS__, 'enqueueAssets']);
     }
 
     public static function addMetaBoxes()
     {
         add_meta_box('my-polls-result-meta-box', __('Result', 'my-polls'), [__CLASS__, 'render'], 'poll', 'side');
+        add_meta_box('my-polls-result-chart-meta-box', __('Chart', 'my-polls'), [__CLASS__, 'renderChart'], 'poll', 'side');
+    }
+
+    public static function renderChart($post = null)
+    {
+        $poll = new Poll($post);
+
+        $items = $poll->getItems();
+
+        $labels = [];
+        $data   = [];
+        $colors = [];
+
+        foreach ($items as $item) {
+            $item = new Item($item);
+            $labels[] = $item->getContent();
+            $data[] = count($poll->getVotesByItem($item->ID));
+            $colors[] = $item->getColor();
+        }
+
+        printf('<canvas %s></canvas>', acf_esc_attr([
+            'id' => 'my-polls-result-chart',
+            'data-options' => [
+                'type' => 'doughnut',
+                'data' => [
+                    'labels' => $labels,
+                    'datasets' => [
+                        [
+                            'data'            => $data,
+                            'backgroundColor' => $colors,
+                        ],
+                    ],
+                ],
+            ],
+        ]));
     }
 
     public static function render($post = null)
@@ -27,6 +64,8 @@ class Result
             Helpers::adminNotice(__('No items found.', 'my-polls'), 'info', true);
             return;
         }
+
+        $anonymous = $poll->areVotesAnonymous();
 
         echo '<ol>';
 
@@ -51,5 +90,23 @@ class Result
         }
 
         echo '</ol>';
+    }
+
+    public static function enqueueAssets()
+    {
+        wp_register_script('my-polls-result-script', plugins_url('build/result.js', MY_POLLS_PLUGIN_FILE), ['jquery'], false, true);
+
+        wp_localize_script('my-polls-result-script', 'MyPolls', [
+            'ajaxurl' => admin_url('admin-ajax.php'),
+        ]);
+
+        if (is_admin()) {
+            $screen = get_current_screen();
+            if ($screen->id == 'poll') {
+                wp_enqueue_script('my-polls-result-script');
+            }
+        } elseif (is_singular('poll')) {
+            wp_enqueue_script('my-polls-result-script');
+        }
     }
 }

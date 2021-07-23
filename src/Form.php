@@ -40,6 +40,11 @@ class Form
 
         $poll = new Poll($post);
 
+        if ($poll->hasEndDate() && $poll->getEndDate('U') <= time()) {
+            Helpers::alert(__('The voting period is over.', 'my-polls'), 'danger');
+            return;
+        }
+
         $invitee = $poll->getInviteeByUser($user_id);
 
         if (! $invitee) {
@@ -103,6 +108,11 @@ class Form
         }
 
         $poll = new Poll($poll_id);
+
+        if ($poll->hasEndDate() && $poll->getEndDate('U') <= time()) {
+            wp_send_json(Helpers::alert(__('The voting period is over.', 'my-polls'), 'danger', true));
+            return;
+        }
 
         if (! $user_id || ! get_userdata($user_id)) {
             wp_send_json(Helpers::alert(__('Invalid user.', 'my-polls'), 'danger', true));

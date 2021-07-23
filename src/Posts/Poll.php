@@ -147,10 +147,11 @@ class Poll extends Post
     {
         $processed = [];
         foreach ($items as $item) {
-            $item = wp_parse_args($item, ['content' => '']);
+            $item = wp_parse_args($item, ['content' => '', 'color' => '']);
             if (! empty($item['id']) && get_post_type($item['id'])) {
                 $post = new Item($item['id']);
                 $post->setContent($item['content']);
+                $post->setColor($item['color']);
                 $processed[] = $post->ID;
             } else {
                 $post_id = wp_insert_post([
@@ -161,6 +162,7 @@ class Poll extends Post
                 ]);
                 $post = new Item($post_id);
                 $post->setContent($item['content']);
+                $post->setColor($item['color']);
                 $post->setPoll($this->ID);
                 $processed[] = $post->ID;
             }
@@ -201,5 +203,30 @@ class Poll extends Post
                 ],
             ],
         ]);
+    }
+
+    public function getEndDate($format = null)
+    {
+        $date = $this->getField('end_date');
+
+        if (! $date) {
+            return false;
+        }
+
+        if (! $format) {
+            $format = get_option('date_format');
+        }
+
+        return date_i18n($format, strtotime($date));
+    }
+
+    public function hasEndDate()
+    {
+        return $this->getEndDate() ? true : false;
+    }
+
+    public function areVotesAnonymous()
+    {
+        return $this->getField('anonymous_votes') ? true : false;
     }
 }

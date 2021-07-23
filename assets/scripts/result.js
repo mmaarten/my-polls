@@ -2,39 +2,9 @@ import Chart from 'chart.js/auto';
 
 (function(){
 
-  var chart;
-
-  function update() {
-    var $elem = jQuery('#my-polls-result');
-
-    var data = {
-      action : $elem.data('action'),
-      poll   : $elem.data('poll'),
-    }
-
-    data[$elem.data('noncename')] = $elem.data('nonce');
-
-    console.log(data);
-
-    $elem.addClass('is-loading');
-    jQuery.post(MyPolls.ajaxurl, data, function(response){
-      $elem.removeClass('is-loading');
-
-      if (chart) {
-        chart.destroy();
-      }
-      chart = new Chart($elem, response.data);
-    });
-  }
-
-  window.addEventListener('DOMContentLoaded', function() {
-    update();
+  jQuery('#my-polls-result-chart').each(function(){
+    var $elem = jQuery(this);
+    const chart = new Chart($elem, $elem.data('options'));
   });
 
-  window.myPollsResult = {
-    update : update,
-  };
-
 })();
-
-

@@ -23,4 +23,14 @@ class Item extends Post
     {
         return $this->updateField('content', $value);
     }
+
+    public function getColor()
+    {
+        return $this->getField('color');
+    }
+
+    public function setColor($value)
+    {
+        return $this->updateField('color', $value);
+    }
 }

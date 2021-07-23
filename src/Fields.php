@@ -13,6 +13,19 @@ class Fields
         add_action('acf/init', [__CLASS__, 'addInviteeFields']);
         add_action('acf/init', [__CLASS__, 'addItemFields']);
         add_action('acf/init', [__CLASS__, 'addVoteFields']);
+
+        add_filter('acf/settings/l10n_textdomain', function ($return) {
+
+            $post_types = ['poll', 'poll_invitee', 'poll_item', 'poll_vote'];
+
+            $screen = get_current_screen();
+
+            if (in_array($screen->id, $post_types)) {
+                return 'my-polls';
+            }
+
+            return $return;
+        }, PHP_INT_MAX);
     }
 
     /**
@@ -45,6 +58,21 @@ class Fields
             'rows'          => 4,
             'new_lines'     => 'wpautop',
             'required'      => true,
+            'parent'        => 'my_polls_poll_group',
+        ]);
+
+        // End date
+        acf_add_local_field([
+            'key'           => 'my_polls_poll_end_date_field',
+            'label'         => __('End date', 'my-polls'),
+            'instructions'  => __('', 'my-polls'),
+            'name'          => 'end_date',
+            'type'           => 'date_time_picker',
+            'display_format' => get_option('date_format'),
+            'return_format'  => 'Y-m-d',
+            'first_day'      => get_option('start_of_week', 0),
+            'default_value'  => '',
+            'required'       => false,
             'parent'        => 'my_polls_poll_group',
         ]);
 
@@ -92,6 +120,29 @@ class Fields
             'type'          => 'text',
             'required'      => true,
             'parent'        => 'my_polls_poll_items_field',
+        ]);
+
+        // Item Color
+        acf_add_local_field([
+            'key'           => 'my_polls_poll_items_color_field',
+            'label'         => __('Color', 'my-polls'),
+            'instructions'  => __('', 'my-polls'),
+            'name'          => 'color',
+            'type'          => 'color_picker',
+            'required'      => true,
+            'parent'        => 'my_polls_poll_items_field',
+        ]);
+
+        // Anonymous votes
+        acf_add_local_field([
+            'key'           => 'my_polls_poll_anonymous_votes_field',
+            'label'         => __('Anonymous votes', 'my-polls'),
+            'instructions'  => __('', 'my-polls'),
+            'name'          => 'anonymous_votes',
+            'type'          => 'true_false',
+            'default_value' => false,
+            'required'      => false,
+            'parent'        => 'my_polls_poll_group',
         ]);
     }
 

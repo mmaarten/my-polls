@@ -111,6 +111,7 @@ class App
             $value[] = [
                 'my_polls_poll_items_id_field'      => $item->ID,
                 'my_polls_poll_items_content_field' => $item->getContent(),
+                'my_polls_poll_items_color_field'   => $item->getColor(),
             ];
         }
 
