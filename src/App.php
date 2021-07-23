@@ -36,42 +36,63 @@ class App
         });
 
         add_action('my_polls/item_added', function ($item, $poll) {
-            $x;
         }, 10, 2);
 
         add_action('my_polls/item_removed', function ($item, $poll) {
-            $result = $poll->getField('result');
-
-            if (! is_array($result)) {
-                $result = [];
-            }
-
-            if (isset($result[$item['id']])) {
-                unset($result[$item['id']]);
-            }
-
-            $poll->updateField('result', $result);
+            $poll->removeVotesByItem($item['id']);
         }, 10, 2);
 
         add_action('my_polls/invitee_added', function ($user_id, $poll) {
-            $x;
+
+            $email_sent = $poll->getField('email_sent');
+
+            if (! is_array($email_sent)) {
+                $email_sent = [];
+            }
+
+            if (isset($email_sent[$user_id])) {
+                return;
+            }
+
+            $user = get_userdata($user_id);
+
+            if (! $user) {
+                return;
+            }
+
+            $to = $user->user_email;
+
+            $subject = sprintf(__('You are invited for poll: %s', 'my-polls'), $poll->post_title);
+
+            $message = '';
+
+            wp_mail($to, $subject, $message);
+
+            $email_sent[$user_id] = true;
+
+            $poll->updateField('email_sent', $email_sent);
+
         }, 10, 2);
 
         add_action('my_polls/invitee_removed', function ($user_id, $poll) {
-            $result = $poll->getField('result');
-
-            if (! is_array($result)) {
-                $result = [];
-            }
-
-            foreach ($result as $item_id => $users) {
-                if (isset($users[$user_id])) {
-                    unset($users[$user_id]);
-                }
-            }
-
-            $poll->updateField('result', $result);
+            $poll->setVotes($user_id, []);
         }, 10, 2);
+    }
+
+    public static function sendNotification($to, $subject, $message)
+    {
+        add_filter('wp_mail_content_type', [__CLASS__, 'wpMailContentType']);
+
+        $send = wp_mail($to, $subject, $message);
+
+        remove_filter('wp_mail_content_type', [__CLASS__, 'wpMailContentType']);
+
+        return $send;
+    }
+
+    public static function wpMailContentType()
+    {
+        return 'text/html';
     }
 
     public static function renderResult($post)
@@ -84,12 +105,12 @@ class App
 
         foreach ($poll->getItems() as $item) {
             $labels[] = $item['text'];
-            $data[] = count($poll->getResults($item['id']));
+            $data[] = count($poll->getVotesByItem($item['id']));
             $colors[] = $item['color'];
         }
 
         $options = [
-            'type' => 'doughnut',
+            'type' => $poll->getChartType(),
             'data' => [
                 'labels' => $labels,
                 'datasets' => [
@@ -171,7 +192,7 @@ class App
                     '<li><label><input type="checkbox" name="items[]" value="%1$s"%3$s> %2$s</label></li>',
                     esc_attr($item['id']),
                     esc_html($item['text']),
-                    checked($poll->hasResult($user_id, $item['id']), true, false)
+                    checked($poll->hasVoted($user_id, $item['id']), true, false)
                 );
             }
 
@@ -220,7 +241,7 @@ class App
             return;
         }
 
-        $poll->setResults($user_id, $items);
+        $poll->setVotes($user_id, $items);
     }
 
     /**

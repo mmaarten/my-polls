@@ -49,54 +49,96 @@ class Poll extends Post
         return current(wp_filter_object_list($this->getItems(), ['id' => $id]));
     }
 
-    public function getResults($item_id = null)
+    public function getChartType()
     {
-        $results = $this->getField('results');
-
-        if (! is_array($results)) {
-            $results = [];
-        }
-
-        if (is_null($item_id)) {
-            return $results;
-        }
-
-        if (isset($results[$item_id])) {
-            return $results[$item_id];
-        }
-
-        return [];
+        return $this->getField('chart_type');
     }
 
-    public function hasResult($user_id, $item_id)
+    public function getVotes()
     {
-        $item = $this->getItem($item_id);
+        $votes = $this->getField('votes');
 
-        if (! $item) {
-            return false;
+        if (! is_array($votes)) {
+            $votes = [];
         }
 
-        return in_array($user_id, $this->getResults($item_id));
+        return $votes;
     }
 
-    public function setResults($user_id, $item_ids)
+    public function getVotesByItem($item_id)
     {
-        if (! $this->isInvitee($user_id)) {
-            return false;
+        $votes = $this->getVotes();
+
+        if (isset($votes[$item_id])) {
+            return $votes[$item_id];
         }
 
-        $items = $this->getItems();
+        return null;
+    }
 
-        $results = $this->getResults();
+    public function getVotesByUser($user_id)
+    {
+        $votes = $this->getVotes();
 
-        foreach ($items as $item) {
-            if (in_array($item['id'], $item_ids)) {
-                $results[$item['id']][$user_id] = $user_id;
-            } elseif (isset($results[$item['id']][$user_id])) {
-                unset($results[$item['id']][$user_id]);
+        $items = [];
+
+        foreach ($votes as $item_id => $users) {
+            if (isset($users[$user_id])) {
+                $item = $this->getItem($item_id);
+                if ($item) {
+                    $items[$item['id']] = $item;
+                }
             }
         }
 
-        return $this->updateField('results', $results);
+        return $items;
+    }
+
+    public function removeVotesByItem($item_id)
+    {
+        $votes = $this->getVotes();
+
+        if (isset($votes[$item_id])) {
+            unset($votes[$item_id]);
+        }
+
+        return $this->updateField('votes', $votes);
+    }
+
+    public function removeVotesByUser($user_id)
+    {
+        $votes = $this->getVotes();
+
+        foreach ($votes as $item_id => &$users) {
+            if (isset($users[$user_id])) {
+                unset($users[$user_id]);
+            }
+        }
+
+        return $this->updateField('votes', $votes);
+    }
+
+    public function hasVoted($user_id, $item_id)
+    {
+        $votes = $this->getVotesByUser($user_id);
+
+        return isset($votes[$item_id]) && $votes[$item_id];
+    }
+
+    public function setVotes($user_id, $item_ids)
+    {
+        $votes = $this->getVotes();
+
+        foreach ($votes as $item_id => &$user_ids) {
+            if (in_array($item_id, $item_ids)) {
+                $user_ids[$user_id] = $user_id;
+            } elseif (isset($user_ids[$user_id])) {
+                unset($user_ids[$user_id]);
+            }
+        }
+
+        error_log(print_r($votes, true));
+
+        return $this->updateField('votes', $votes);
     }
 }
