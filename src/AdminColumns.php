@@ -5,6 +5,7 @@ namespace My\Polls;
 use My\Polls\Posts\Item;
 use My\Polls\Posts\Poll;
 use My\Polls\Posts\Invitee;
+use My\Polls\Posts\Vote;
 
 class AdminColumns
 {
@@ -23,6 +24,9 @@ class AdminColumns
 
         add_filter('manage_poll_item_posts_columns', [__CLASS__, 'itemColumns']);
         add_action('manage_poll_item_posts_custom_column', [__CLASS__, 'itemColumnContent'], 10, 2);
+
+        add_filter('manage_poll_vote_posts_columns', [__CLASS__, 'voteColumns']);
+        add_action('manage_poll_vote_posts_custom_column', [__CLASS__, 'voteColumnContent'], 10, 2);
     }
 
     /**
@@ -137,6 +141,50 @@ class AdminColumns
             case 'content':
                 $content = trim($item->getContent());
                 echo $content ? esc_html($content) : esc_html(self::NO_VALUE);
+                break;
+        }
+    }
+
+    /**
+     * Vote columns
+     *
+     * @param array $columns
+     * @return array
+     */
+    public static function voteColumns($columns)
+    {
+        return [
+            'cb'      => $columns['cb'],
+            'title'   => $columns['title'],
+            'poll'    => __('Poll', 'my-events'),
+            'invitee' => __('Invitee', 'my-events'),
+            'item'    => __('Item', 'my-events'),
+        ] + $columns;
+    }
+
+    /**
+     * Vote column content
+     *
+     * @param string $column
+     * @param int    $post_id
+     * @return array
+     */
+    public static function voteColumnContent($column, $post_id)
+    {
+        $vote = new Vote($post_id);
+
+        switch ($column) {
+            case 'poll':
+                $poll = Helpers::renderPosts($vote->getPoll());
+                echo $poll ? $poll : esc_html(self::NO_VALUE);
+                break;
+            case 'invitee':
+                $invitee = Helpers::renderPosts($vote->getInvitee());
+                echo $invitee ? $invitee : esc_html(self::NO_VALUE);
+                break;
+            case 'item':
+                $item = Helpers::renderPosts($vote->getItem());
+                echo $item ? $item : esc_html(self::NO_VALUE);
                 break;
         }
     }

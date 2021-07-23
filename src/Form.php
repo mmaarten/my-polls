@@ -3,6 +3,7 @@
 namespace My\Polls;
 
 use My\Polls\Posts\Poll;
+use My\Polls\Posts\Item;
 
 class Form
 {
@@ -39,7 +40,9 @@ class Form
 
         $poll = new Poll($post);
 
-        if (! $poll->isInvitee($user_id)) {
+        $invitee = $poll->getInviteeByUser($user_id);
+
+        if (! $invitee) {
             Helpers::alert(__('You need an invitation in order to vote.', 'my-polls'), 'danger');
             return;
         }
@@ -59,11 +62,12 @@ class Form
             echo '<ul class="list-unstyled">';
 
             foreach ($poll->getItems() as $item) {
+                $item = new Item($item);
                 printf(
                     '<li><label><input type="checkbox" name="items[]" value="%1$s"%3$s> %2$s</label></li>',
-                    esc_attr($item['id']),
-                    esc_html($item['text']),
-                    checked($poll->hasVoted($user_id, $item['id']), true, false)
+                    esc_attr($item->ID),
+                    esc_html($item->getContent()),
+                    checked($invitee->hasVote($item->ID), true, false)
                 );
             }
 
@@ -112,14 +116,16 @@ class Form
             wp_send_json(Helpers::alert(__('You cannot vote for someone else.', 'my-polls'), 'danger', true));
         }
 
-        if (! $poll->isInvitee($user_id)) {
+        $invitee = $poll->getInviteeByUser($user_id);
+
+        if (! $invitee) {
             wp_send_json(Helpers::alert(__('You need an invitation in order to vote.', 'my-polls'), 'danger', true));
             return;
         }
 
-        $poll->setVotes($user_id, $items);
+        $invitee->setVotes($items);
 
-        wp_send_json(Helpers::alert(__('Your vote has been saved.', 'my-polls'), 'success', true));
+        wp_send_json(Helpers::alert(__('Your votes have been saved.', 'my-polls'), 'success', true));
     }
 
     public static function enqueueAssets()

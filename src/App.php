@@ -20,8 +20,8 @@ class App
             'PostTypes',
             'AdminMenu',
             'AdminColumns',
-            // 'Form',
-            // 'Result',
+            'Form',
+            'Result',
             'Notifications',
         ]);
 

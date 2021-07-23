@@ -60,8 +60,8 @@ class Invitee extends Post
     {
         $vote = current($this->getVotes([
             'meta_key'     => 'item',
-            'meta_compare' => '=',
-            'meta_alue'    => $item_id,
+            'meta_compare' => ' = ',
+            'meta_value'   => $item_id,
             'numberposts'  => 1,
         ]));
 

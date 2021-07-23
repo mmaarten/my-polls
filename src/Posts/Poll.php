@@ -176,4 +176,30 @@ class Poll extends Post
             wp_delete_post($item->ID, true);
         }
     }
+
+    public function getVotes($args = [])
+    {
+        return get_posts([
+            'post_type'    => 'poll_vote',
+            'post_status'  => 'publish',
+            'numberposts'  => 999,
+            'fields'       => 'ids',
+            'meta_key'     => 'poll',
+            'meta_compare' => '=',
+            'meta_value'   => $this->ID,
+        ] + $args);
+    }
+
+    public function getVotesByItem($item_id)
+    {
+        return $this->getVotes([
+            'meta_query'  => [
+                [
+                    'key'     => 'item',
+                    'compare' => '=',
+                    'value'   => $item_id,
+                ],
+            ],
+        ]);
+    }
 }
