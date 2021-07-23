@@ -10,10 +10,8 @@ class Fields
     public static function init()
     {
         add_action('acf/init', [__CLASS__, 'addPollFields']);
-
-        // add_filter('acf/settings/l10n_textdomain', function () {
-        //     return 'my-polls';
-        // });
+        add_action('acf/init', [__CLASS__, 'addInviteeFields']);
+        add_action('acf/init', [__CLASS__, 'addItemFields']);
     }
 
     /**
@@ -86,24 +84,119 @@ class Fields
 
         // Item Content
         acf_add_local_field([
-            'key'           => 'my_polls_poll_items_text_field',
+            'key'           => 'my_polls_poll_items_content_field',
             'label'         => __('Content', 'my-polls'),
             'instructions'  => __('', 'my-polls'),
-            'name'          => 'text',
+            'name'          => 'content',
             'type'          => 'text',
             'required'      => true,
             'parent'        => 'my_polls_poll_items_field',
         ]);
+    }
 
-        // Item Color
+    /**
+     * Add invitee fields
+     */
+    public static function addInviteeFields()
+    {
+        acf_add_local_field_group([
+            'key'      => 'my_polls_invitee_group',
+            'title'    => __('General', 'my-polls'),
+            'fields'   => [],
+            'location' => [
+                [
+                    [
+                        'param'    => 'post_type',
+                        'operator' => '==',
+                        'value'    => 'poll_invitee',
+                    ],
+                ],
+            ],
+        ]);
+
+        // Poll
         acf_add_local_field([
-            'key'           => 'my_polls_poll_items_color_field',
-            'label'         => __('Color', 'my-polls'),
+            'key'           => 'my_polls_invitee_event_field',
+            'label'         => __('Poll', 'my-polls'),
             'instructions'  => __('', 'my-polls'),
-            'name'          => 'color',
-            'type'          => 'color_picker',
+            'name'          => 'poll',
+            'type'          => 'post_object',
+            'post_type'     => 'poll',
+            'return_format' => 'id',
+            'multiple'      => false,
             'required'      => true,
-            'parent'        => 'my_polls_poll_items_field',
+            'parent'        => 'my_polls_invitee_group',
+        ]);
+
+        // User
+        acf_add_local_field([
+            'key'           => 'my_polls_invitee_user_field',
+            'label'         => __('User', 'my-polls'),
+            'instructions'  => __('', 'my-polls'),
+            'name'          => 'user',
+            'type'          => 'user',
+            'return_format' => 'id',
+            'multiple'      => false,
+            'required'      => true,
+            'parent'        => 'my_polls_invitee_group',
+        ]);
+
+        // Invitation sent
+        acf_add_local_field([
+            'key'           => 'my_polls_invitee_invitation_sent_field',
+            'label'         => __('Invitation sent', 'my-polls'),
+            'instructions'  => __('', 'my-polls'),
+            'name'          => 'invitation_sent',
+            'type'          => 'true_false',
+            'default_value' => false,
+            'required'      => false,
+            'parent'        => 'my_polls_invitee_group',
+        ]);
+    }
+
+    /**
+     * Add item fields
+     */
+    public static function addItemFields()
+    {
+        acf_add_local_field_group([
+            'key'      => 'my_polls_item_group',
+            'title'    => __('General', 'my-polls'),
+            'fields'   => [],
+            'location' => [
+                [
+                    [
+                        'param'    => 'post_type',
+                        'operator' => '==',
+                        'value'    => 'poll_item',
+                    ],
+                ],
+            ],
+        ]);
+
+        // Poll
+        acf_add_local_field([
+            'key'           => 'my_polls_item_poll_field',
+            'label'         => __('Poll', 'my-polls'),
+            'instructions'  => __('', 'my-polls'),
+            'name'          => 'poll',
+            'type'          => 'post_object',
+            'post_type'     => 'poll',
+            'return_format' => 'id',
+            'multiple'      => false,
+            'required'      => true,
+            'parent'        => 'my_polls_item_group',
+        ]);
+
+        // User
+        acf_add_local_field([
+            'key'           => 'my_polls_item_content_field',
+            'label'         => __('content', 'my-polls'),
+            'instructions'  => __('', 'my-polls'),
+            'name'          => 'content',
+            'type'          => 'text',
+            'required'      => true,
+            'parent'        => 'my_polls_item_group',
         ]);
     }
 }

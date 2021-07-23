@@ -6,139 +6,174 @@ class Poll extends Post
 {
     public function getInvitees($args = [])
     {
-        $user_ids = $this->getField('invitees');
+        return get_posts($args + [
+            'post_type'    => 'poll_invitee',
+            'post_status'  => 'publish',
+            'numberposts'  => 999,
+            'meta_key'     => 'poll',
+            'meta_compare' => '=',
+            'meta_value'   => $this->ID,
+        ]);
+    }
 
-        if (! $user_ids || ! is_array($user_ids)) {
+    public function getItems($args = [])
+    {
+        return get_posts($args + [
+            'post_type'    => 'poll_item',
+            'post_status'  => 'publish',
+            'numberposts'  => 999,
+            'meta_key'     => 'poll',
+            'meta_compare' => '=',
+            'meta_value'   => $this->ID,
+        ]);
+    }
+
+    public function getInviteeByUser($user_id)
+    {
+        $invitee = current($this->getInvitees([
+            'numberposts' => 1,
+            'meta_query' => [
+                [
+                    'key'     => 'user',
+                    'compare' => '=',
+                    'value'   => $user_id,
+                ],
+            ],
+        ]));
+
+        return $invitee ? new Invitee($invitee) : null;
+    }
+
+    public function getInviteeByPost($invitee_id)
+    {
+        $invitee = current($this->getInvitees([
+            'numberposts' => 1,
+            'include'     => [$invitee_id],
+        ]));
+
+        return $invitee ? new Invitee($invitee) : null;
+    }
+
+    public function getInviteesUsers($args = [])
+    {
+        $invitees = $this->getInvitees();
+
+        $user_ids = [];
+
+        foreach ($invitees as $invitee) {
+            $invitee = new Invitee($invitee);
+            $user_ids[] = $invitee->getUser();
+        }
+
+        if (! $user_ids) {
             return [];
         }
 
         return get_users(['include' => $user_ids] + $args);
     }
 
-    public function getInvitee($user_id)
-    {
-        $invitees = $this->getInvitees();
-
-        foreach ($invitees as $user) {
-            if ($user_id == $user->ID) {
-                return $user;
-            }
-        }
-
-        return null;
-    }
-
     public function isInvitee($user_id)
     {
-        return $this->getInvitee($user_id) ? true : false;
+        return in_array($user_id, $this->getInviteesUsers(['fields' => 'ID']));
     }
 
-    public function getItems()
+    public function addInvitee($user_id)
     {
-        $items = $this->getField('items');
+        $invitee = $this->getInviteeByUser($user_id);
 
-        if (! is_array($items)) {
-            return [];
+        if ($invitee) {
+            return $invitee->ID;
         }
 
-        return $items;
+        $post_id = wp_insert_post([
+            'post_title'   => '',
+            'post_content' => '',
+            'post_type'    => 'poll_invitee',
+            'post_status'  => 'publish',
+        ]);
+
+        $invitee = new Invitee($post_id);
+        $invitee->setPoll($this->ID);
+        $invitee->setUser($user_id);
+
+        do_action('my_polls/invitee_added', $invitee, $invitee->getUser(), $this);
+
+        return $invitee->ID;
     }
 
-    public function getItem($id)
+    public function removeInvitee($user_id)
     {
-        return current(wp_filter_object_list($this->getItems(), ['id' => $id]));
-    }
+        $invitee = $this->getInviteeByUser($user_id);
 
-    public function getChartType()
-    {
-        return $this->getField('chart_type');
-    }
-
-    public function getVotes()
-    {
-        $votes = $this->getField('votes');
-
-        if (! is_array($votes)) {
-            $votes = [];
+        if (! $invitee) {
+            return false;
         }
 
-        return $votes;
+        return $this->removeInviteeByPost($invitee->ID);
     }
 
-    public function getVotesByItem($item_id)
+    public function removeInviteeByPost($invitee_id)
     {
-        $votes = $this->getVotes();
+        $invitee = $this->getInviteeByPost($invitee_id);
 
-        if (isset($votes[$item_id])) {
-            return $votes[$item_id];
+        if (! $invitee) {
+            return false;
         }
 
-        return null;
+        do_action('my_polls/invitee_removed', $invitee, $invitee->getUser(), $this);
+
+        return wp_delete_post($invitee->ID, true);
     }
 
-    public function getVotesByUser($user_id)
+    public function setInvitees($user_ids)
     {
-        $votes = $this->getVotes();
+        $processed = [];
 
-        $items = [];
+        foreach ((array) $user_ids as $user_id) {
+            $processed[] = $this->addInvitee($user_id);
+        }
 
-        foreach ($votes as $item_id => $users) {
-            if (isset($users[$user_id])) {
-                $item = $this->getItem($item_id);
-                if ($item) {
-                    $items[$item['id']] = $item;
-                }
+        $delete = $this->getInvitees([
+            'exclude'     => $processed,
+            'post_status' => 'any',
+        ]);
+
+        foreach ($delete as $invitee) {
+            $this->removeInviteeByPost($invitee->ID);
+        }
+    }
+
+    public function setItems($items)
+    {
+        $processed = [];
+        foreach ($items as $item) {
+            $item = wp_parse_args($item, ['content' => '']);
+            if (! empty($item['id']) && get_post_type($item['id'])) {
+                $post = new Item($item['id']);
+                $post->setContent($item['content']);
+                $processed[] = $post->ID;
+            } else {
+                $post_id = wp_insert_post([
+                    'post_title'   => '',
+                    'post_content' => '',
+                    'post_status'  => 'publish',
+                    'post_type'    => 'poll_item',
+                ]);
+                $post = new Item($post_id);
+                $post->setContent($item['content']);
+                $post->setPoll($this->ID);
+                $processed[] = $post->ID;
             }
         }
 
-        return $items;
-    }
+        $delete = $this->getItems([
+            'post_type'   => 'poll_item',
+            'post_status' => 'any',
+            'exclude'     => $processed,
+        ]);
 
-    public function removeVotesByItem($item_id)
-    {
-        $votes = $this->getVotes();
-
-        if (isset($votes[$item_id])) {
-            unset($votes[$item_id]);
+        foreach ($delete as $item) {
+            wp_delete_post($item->ID, true);
         }
-
-        return $this->updateField('votes', $votes);
-    }
-
-    public function removeVotesByUser($user_id)
-    {
-        $votes = $this->getVotes();
-
-        foreach ($votes as $item_id => &$users) {
-            if (isset($users[$user_id])) {
-                unset($users[$user_id]);
-            }
-        }
-
-        return $this->updateField('votes', $votes);
-    }
-
-    public function hasVoted($user_id, $item_id)
-    {
-        $votes = $this->getVotesByUser($user_id);
-
-        return isset($votes[$item_id]) && $votes[$item_id];
-    }
-
-    public function setVotes($user_id, $item_ids)
-    {
-        $votes = $this->getVotes();
-
-        foreach ($votes as $item_id => &$user_ids) {
-            if (in_array($item_id, $item_ids)) {
-                $user_ids[$user_id] = $user_id;
-            } elseif (isset($user_ids[$user_id])) {
-                unset($user_ids[$user_id]);
-            }
-        }
-
-        error_log(print_r($votes, true));
-
-        return $this->updateField('votes', $votes);
     }
 }

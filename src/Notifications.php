@@ -3,26 +3,52 @@
 namespace My\Polls;
 
 use My\Polls\Posts\Poll;
+use My\Polls\Posts\Invitee;
 
 class Notifications
 {
     public static function init()
     {
-        add_action('my_polls/invitee_added', [__CLASS__, 'sendInvitation'], 10, 2);
+        add_action('init', [__CLASS__, 'maybeSendInvitation']);
     }
 
-    public static function sendInvitation($user_id, $poll)
+    public static function maybeSendInvitation()
     {
-        $email_sent = $poll->getField('email_sent');
+        $invitees = get_posts([
+            'post_type'   => 'poll_invitee',
+            'post_status' => 'publish',
+            'numberposts' => 999,
+            'meta_query'  => [
+                'relation' => 'OR',
+                [
+                    'key'     => 'invitation_sent',
+                    'compare' => '=',
+                    'value'   => false,
+                ],
+                [
+                    'key'     => 'invitation_sent',
+                    'compare' => '!=',
+                    'value'   => true,
+                ],
+                [
+                    'key'     => 'invitation_sent',
+                    'compare' => 'NOT EXISTS',
+                ],
+            ],
+        ]);
 
-        if (! is_array($email_sent)) {
-            $email_sent = [];
+        foreach ($invitees as $invitee) {
+            $invitee = new Invitee($invitee);
+            $poll_id = $invitee->getPoll();
+            if ($poll_id && get_post_type($poll_id) && get_post_status($poll_id) == 'publish') {
+                self::sendInvitation($invitee, $invitee->getUser(), new Poll($poll_id));
+                $invitee->setInvitationSent(true);
+            }
         }
+    }
 
-        if (isset($email_sent[$user_id])) {
-            return false;
-        }
-
+    public static function sendInvitation($invitee, $user_id, $poll)
+    {
         $user = get_userdata($user_id);
 
         if (! $user) {
@@ -41,13 +67,7 @@ class Notifications
             esc_html__('Click the link to vote.', 'my-polls')
         );
 
-        $send = self::sendNotification($to, $subject, $message);
-
-        $email_sent[$user_id] = true;
-
-        $poll->updateField('email_sent', $email_sent);
-
-        return $send;
+        return self::sendNotification($to, $subject, $message);
     }
 
     public static function sendNotification($to, $subject, $message)
