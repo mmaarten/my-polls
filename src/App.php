@@ -15,7 +15,9 @@ class App
             call_user_func([__NAMESPACE__ . '\\' . $class, 'init']);
         }, [
             'Fields',
-            'PostTypes'
+            'PostTypes',
+            'Form',
+            'Result',
         ]);
 
         add_action('init', [__CLASS__, 'loadTextdomain'], 0);
@@ -25,15 +27,6 @@ class App
         add_action('wp_enqueue_scripts', [__CLASS__, 'registerAssets'], 0);
         add_action('admin_enqueue_scripts', [__CLASS__, 'registerAssets'], 0);
         add_action('admin_enqueue_scripts', [__CLASS__, 'adminEnqueueAssets']);
-
-        add_filter('the_content', function ($return) {
-            if (is_singular('poll')) {
-                ob_start();
-                self::form();
-                $return .= ob_get_clean();
-            }
-            return $return;
-        });
 
         add_action('my_polls/item_added', function ($item, $poll) {
         }, 10, 2);
@@ -146,102 +139,6 @@ class App
     public static function addMetaBoxes()
     {
         add_meta_box('my-polls-result-meta-box', __('Result', 'my-polls'), [__CLASS__, 'renderResult'], 'poll');
-    }
-
-    public static function form($poll = null)
-    {
-        if (! is_user_logged_in()) {
-            printf(
-                '<div class="alert alert-danger" role="alert">%s</div>',
-                esc_html__('', 'my-polls')
-            );
-            return;
-        }
-
-        $user_id = get_current_user_id();
-
-        $poll = new Poll($poll);
-
-        $invitee = $poll->getInvitee($user_id);
-
-        if (! $invitee) {
-            printf(
-                '<div class="alert alert-danger" role="alert">%s</div>',
-                esc_html__('', 'my-polls')
-            );
-            return;
-        }
-
-        $items = $poll->getItems();
-
-        ?>
-
-        <form id="my-polls-form" method="post">
-
-            <?php wp_nonce_field('form', MY_POLLS_NONCE_NAME); ?>
-
-            <input type="hidden" name="poll_id" value="<?php echo esc_attr($poll->ID); ?>">
-            <input type="hidden" name="user_id" value="<?php echo esc_attr($user_id); ?>">
-
-            <?php
-
-            echo '<ul class="list-unstyled">';
-
-            foreach ($items as $item) {
-                printf(
-                    '<li><label><input type="checkbox" name="items[]" value="%1$s"%3$s> %2$s</label></li>',
-                    esc_attr($item['id']),
-                    esc_html($item['text']),
-                    checked($poll->hasVoted($user_id, $item['id']), true, false)
-                );
-            }
-
-            echo '</ul>';
-
-            ?>
-
-            <input type="submit" class="btn btn-primary" value="<?php esc_attr_e('Submit', 'my-polls'); ?>">
-
-        </form>
-
-        <?php
-    }
-
-    public static function processForm()
-    {
-        if (empty($_POST[MY_POLLS_NONCE_NAME])) {
-            return;
-        }
-
-        if (! wp_verify_nonce($_POST[MY_POLLS_NONCE_NAME], 'form')) {
-            return;
-        }
-
-        if (! is_user_logged_in()) {
-            return;
-        }
-
-        $current_user_id = get_current_user_id();
-
-        $poll_id = isset($_POST['poll_id']) ? $_POST['poll_id'] : 0;
-        $user_id = isset($_POST['user_id']) ? $_POST['user_id'] : 0;
-        $items   = isset($_POST['items']) && is_array($_POST['items']) ? $_POST['items'] : [];
-
-        if (! $poll_id || get_post_type($poll_id) != 'poll') {
-            return;
-        }
-
-        if (! $user_id || ! get_userdata($user_id) || $user_id != $current_user_id) {
-            return;
-        }
-
-        $poll = new Poll($poll_id);
-
-        if (! $poll->isInvitee($user_id)) {
-            return;
-        }
-
-        $poll->setVotes($user_id, $items);
     }
 
     /**

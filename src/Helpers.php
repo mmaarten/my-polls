@@ -13,4 +13,19 @@ class Helpers
             $inline ? ' inline' : ''
         );
     }
+
+    public static function alert($message, $type = 'info', $return = false)
+    {
+        $return = sprintf(
+            '<div class="alert alert-%1$s" role="alert">%2$s</div>',
+            sanitize_html_class($type),
+            esc_html($message),
+        );
+
+        if (! $return) {
+            echo $return;
+        }
+
+        return $return;
+    }
 }
