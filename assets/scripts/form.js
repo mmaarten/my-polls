@@ -5,5 +5,9 @@ jQuery('#my-polls-form').on('submit', function(event) {
     jQuery.post(MyPolls.ajaxurl, $elem.serialize(), function(response){
         $elem.removeClass('is-loading');
         $elem.find('.my-polls-output').html(response);
+
+        if (typeof myPollsResult !== 'undefined') {
+          myPollsResult.update();
+        }
     });
 });

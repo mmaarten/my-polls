@@ -101,7 +101,7 @@ class Form
         $poll = new Poll($poll_id);
 
         if (! $user_id || ! get_userdata($user_id)) {
-            wp_send_json(Helpers::alert(__('xxx', 'my-polls'), 'danger', true));
+            wp_send_json(Helpers::alert(__('Invalid user.', 'my-polls'), 'danger', true));
         }
 
         if (! is_user_logged_in()) {

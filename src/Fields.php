@@ -105,21 +105,5 @@ class Fields
             'required'      => true,
             'parent'        => 'my_polls_poll_items_field',
         ]);
-
-        // Chart type
-        acf_add_local_field([
-            'key'           => 'my_polls_poll_chart_type_field',
-            'label'         => __('Chart type', 'my-polls'),
-            'instructions'  => __('', 'my-polls'),
-            'name'          => 'chart_type',
-            'type'          => 'select',
-            'choices'       => [
-                'bar'      => __('Bar', 'my-polls'),
-                'doughnut' => __('Doughnut', 'my-polls'),
-            ],
-            'default_value' => 'bar',
-            'required'      => true,
-            'parent'        => 'my_polls_poll_group',
-        ]);
     }
 }
