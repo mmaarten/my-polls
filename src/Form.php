@@ -40,7 +40,7 @@ class Form
 
         $poll = new Poll($post);
 
-        if ($poll->hasEndDate() && $poll->getEndDate('U') <= time()) {
+        if ($poll->endDateReached()) {
             Helpers::alert(__('The voting period is over.', 'my-polls'), 'danger');
             return;
         }
@@ -109,7 +109,7 @@ class Form
 
         $poll = new Poll($poll_id);
 
-        if ($poll->hasEndDate() && $poll->getEndDate('U') <= time()) {
+        if ($poll->endDateReached()) {
             wp_send_json(Helpers::alert(__('The voting period is over.', 'my-polls'), 'danger', true));
             return;
         }

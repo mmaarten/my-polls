@@ -13,14 +13,14 @@ class Fields
         add_action('acf/init', [__CLASS__, 'addInviteeFields']);
         add_action('acf/init', [__CLASS__, 'addItemFields']);
         add_action('acf/init', [__CLASS__, 'addVoteFields']);
-
+        
         add_filter('acf/settings/l10n_textdomain', function ($return) {
 
             $post_types = ['poll', 'poll_invitee', 'poll_item', 'poll_vote'];
 
             $screen = get_current_screen();
 
-            if (in_array($screen->id, $post_types)) {
+            if ($screen && in_array($screen->id, $post_types)) {
                 return 'my-polls';
             }
 

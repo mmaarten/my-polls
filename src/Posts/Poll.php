@@ -225,6 +225,11 @@ class Poll extends Post
         return $this->getEndDate() ? true : false;
     }
 
+    public function endDateReached()
+    {
+        return $this->hasEndDate() && $this->getEndDate('U') <= time();
+    }
+
     public function areVotesAnonymous()
     {
         return $this->getField('anonymous_votes') ? true : false;

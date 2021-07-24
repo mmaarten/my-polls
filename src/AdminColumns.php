@@ -2,6 +2,7 @@
 
 namespace My\Polls;
 
+use My\Polls\Posts\Post;
 use My\Polls\Posts\Item;
 use My\Polls\Posts\Poll;
 use My\Polls\Posts\Invitee;
@@ -40,7 +41,7 @@ class AdminColumns
         return [
             'cb'       => $columns['cb'],
             'title'    => $columns['title'],
-            'invitees' => __('Invitees', 'my-events'),
+            'invitees' => __('Invitees', 'my-polls'),
         ] + $columns;
     }
 
@@ -74,9 +75,9 @@ class AdminColumns
         return [
             'cb'              => $columns['cb'],
             'title'           => $columns['title'],
-            'poll'            => __('Poll', 'my-events'),
-            'user'            => __('User', 'my-events'),
-            'invitation_sent' => __('Invitation sent', 'my-events'),
+            'poll'            => __('Poll', 'my-polls'),
+            'user'            => __('User', 'my-polls'),
+            'invitation_sent' => __('Invitation sent', 'my-polls'),
         ] + $columns;
     }
 
@@ -117,8 +118,8 @@ class AdminColumns
         return [
             'cb'      => $columns['cb'],
             'title'   => $columns['title'],
-            'poll'    => __('Poll', 'my-events'),
-            'content' => __('Content', 'my-events'),
+            'poll'    => __('Poll', 'my-polls'),
+            'content' => __('Content', 'my-polls'),
         ] + $columns;
     }
 
@@ -156,9 +157,9 @@ class AdminColumns
         return [
             'cb'      => $columns['cb'],
             'title'   => $columns['title'],
-            'poll'    => __('Poll', 'my-events'),
-            'invitee' => __('Invitee', 'my-events'),
-            'item'    => __('Item', 'my-events'),
+            'poll'    => __('Poll', 'my-polls'),
+            'invitee' => __('Invitee', 'my-polls'),
+            'item'    => __('Item', 'my-polls'),
         ] + $columns;
     }
 
