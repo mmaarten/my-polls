@@ -4,6 +4,11 @@ namespace My\Polls\Posts;
 
 class Poll extends Post
 {
+    public function getDescription()
+    {
+        return $this->getField('description');
+    }
+
     public function getInvitees($args = [])
     {
         return get_posts($args + [

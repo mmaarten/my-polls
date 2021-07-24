@@ -27,18 +27,14 @@ class Invitees
         ]);
 
         if (! $invitees) {
-            Helpers::adminNotice(__('No invitees found.', 'my-polls'), 'info', true);
+            printf('<p>%s</p>', __('No invitees found.', 'my-polls'));
             return;
         }
 
         printf('<p>%s</p>', esc_html__('List of users who can vote:', 'my-polls'));
 
-        echo '<ul>';
-
-        echo '<li>';
-        echo Helpers::renderUsers($invitees, '</li><li>');
-        echo '</li>';
-
-        echo '</ul>';
+        echo '<p>';
+        echo Helpers::renderUsers($invitees, ', ');
+        echo '</p>';
     }
 }

@@ -101,7 +101,7 @@ class Fields
         acf_add_local_field([
             'key'           => 'my_polls_poll_items_field',
             'label'         => __('Items', 'my-polls'),
-            'instructions'  => __('', 'my-polls'),
+            'instructions'  => __('The items to vote for.', 'my-polls'),
             'name'          => 'items',
             'type'          => 'repeater',
             'required'      => true,
@@ -145,7 +145,7 @@ class Fields
         acf_add_local_field([
             'key'           => 'my_polls_poll_end_date_field',
             'label'         => __('End date', 'my-polls'),
-            'instructions'  => __('The date the voting ends', 'my-polls'),
+            'instructions'  => __('The date the voting ends.', 'my-polls'),
             'name'          => 'end_date',
             'type'           => 'date_time_picker',
             'display_format' => get_option('date_format'),
@@ -160,7 +160,7 @@ class Fields
         acf_add_local_field([
             'key'           => 'my_polls_poll_anonymous_votes_field',
             'label'         => __('Anonymous voting', 'my-polls'),
-            'instructions'  => __('Users will not be displayed in the results.', 'my-polls'),
+            'instructions'  => __('Names will not be displayed in the results.', 'my-polls'),
             'name'          => 'anonymous_votes',
             'type'          => 'true_false',
             'default_value' => false,

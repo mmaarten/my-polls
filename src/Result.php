@@ -26,6 +26,11 @@ class Result
 
         $items = $poll->getItems();
 
+        if (! $items) {
+            printf('<p>%s</p>', __('No items found.', 'my-polls'));
+            return;
+        }
+
         $labels = [];
         $data   = [];
         $colors = [];
@@ -35,6 +40,11 @@ class Result
             $labels[] = $item->getContent();
             $data[] = count($poll->getVotesByItem($item->ID));
             $colors[] = $item->getColor();
+        }
+
+        if (! array_filter($data)) {
+            printf('<p>%s</p>', __('No votes yet.', 'my-polls'));
+            return;
         }
 
         printf('<canvas %s></canvas>', acf_esc_attr([
@@ -61,39 +71,43 @@ class Result
         $items = $poll->getItems();
 
         if (! $items) {
-            Helpers::adminNotice(__('No items found.', 'my-polls'), 'info', true);
+            printf('<p>%s</p>', __('No items found.', 'my-polls'));
             return;
         }
 
         $anonymous = $poll->areVotesAnonymous();
 
-        echo '<ol>';
-
         $result = [];
 
         foreach ($items as $item) {
-            $result[$item->ID] = count($poll->getVotesByItem($item->ID));
+            $result[$item->ID] = $poll->getVoteUsers($item->ID, [
+                'orderby' => 'display_name',
+                'order'   => 'ASC',
+            ]);
+        }
+
+        if (! array_filter($result)) {
+            printf('<p>%s</p>', __('No votes yet.', 'my-polls'));
+            return;
         }
 
         asort($result, SORT_NUMERIC);
 
         $result = array_reverse($result, true);
 
-        foreach ($result as $item_id => $votes) {
+        echo '<ol>';
+
+        foreach ($result as $item_id => $users) {
             $item = new Item($item_id);
+            $count = count($users);
             printf(
                 '<li><strong>%1$s</strong> (%2$d %3$s)',
                 esc_html($item->getContent()),
-                $votes,
-                esc_html(_n('vote', 'votes', $votes, 'my-polls'))
+                $count,
+                esc_html(_n('vote', 'votes', $count, 'my-polls'))
             );
 
             if (! $poll->areVotesAnonymous()) {
-                $users = $poll->getVoteUsers($item_id, [
-                    'orderby' => 'display_name',
-                    'order'   => 'ASC',
-                ]);
-
                 if ($users) {
                     printf('<p>%s</p>', Helpers::renderUsers($users));
                 }
