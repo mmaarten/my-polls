@@ -1,0 +1,610 @@
+# Copyright (C) 2021 Maarten Menten
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: My Polls 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/my-polls\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2021-07-24T13:40:22+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.5.0\n"
+"X-Domain: my-polls\n"
+
+#. Plugin Name of the plugin
+#. translators: 1: plugin name. 2: Composer command. 3: theme directory
+#: plugin.php:23
+msgid "My Polls"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://github.com/mmaarten/my-polls"
+msgstr ""
+
+#. Author of the plugin
+msgid "Maarten Menten"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://profiles.wordpress.org/maartenm/"
+msgstr ""
+
+#. translators: 1: plugin name. 2: Composer command. 3: theme directory
+#: plugin.php:22
+msgid "%1$s installation is incomplete. Run %2$s within the %3$s directory."
+msgstr ""
+
+#: src/AdminColumns.php:44
+#: src/Fields.php:81
+#: src/Invitees.php:17
+#: src/PostTypes.php:71
+msgid "Invitees"
+msgstr ""
+
+#: src/AdminColumns.php:78
+#: src/AdminColumns.php:121
+#: src/AdminColumns.php:160
+#: src/Fields.php:195
+#: src/Fields.php:255
+#: src/Fields.php:301
+msgid "Poll"
+msgstr ""
+
+#: src/AdminColumns.php:79
+#: src/Fields.php:209
+msgid "User"
+msgstr ""
+
+#: src/AdminColumns.php:80
+#: src/Fields.php:222
+msgid "Invitation sent"
+msgstr ""
+
+#: src/AdminColumns.php:122
+#: src/Fields.php:125
+msgid "Content"
+msgstr ""
+
+#: src/AdminColumns.php:161
+#: src/Fields.php:315
+msgid "Invitee"
+msgstr ""
+
+#: src/AdminColumns.php:162
+#: src/Fields.php:329
+msgid "Item"
+msgstr ""
+
+#: src/Fields.php:40
+#: src/Fields.php:179
+#: src/Fields.php:239
+#: src/Fields.php:285
+msgid "General"
+msgstr ""
+
+#: src/Fields.php:56
+msgid "Description"
+msgstr ""
+
+#: src/Fields.php:57
+msgid "A brief description about this poll."
+msgstr ""
+
+#: src/Fields.php:69
+msgid "Anyone can vote"
+msgstr ""
+
+#: src/Fields.php:82
+msgid "A list of users who are able to vote."
+msgstr ""
+
+#: src/Fields.php:103
+#: src/PostTypes.php:111
+msgid "Items"
+msgstr ""
+
+#: src/Fields.php:114
+msgid "ID"
+msgstr ""
+
+#: src/Fields.php:136
+msgid "Color"
+msgstr ""
+
+#: src/Fields.php:137
+msgid "The color for the chart."
+msgstr ""
+
+#: src/Fields.php:147
+msgid "End date"
+msgstr ""
+
+#: src/Fields.php:148
+msgid "The date the voting ends"
+msgstr ""
+
+#: src/Fields.php:162
+msgid "Anonymous voting"
+msgstr ""
+
+#: src/Fields.php:163
+msgid "Users will not be displayed in the results."
+msgstr ""
+
+#: src/Fields.php:269
+msgid "content"
+msgstr ""
+
+#: src/Form.php:30
+#: src/Form.php:115
+msgid "Invalid poll."
+msgstr ""
+
+#: src/Form.php:35
+#: src/Form.php:130
+msgid "You need to login in order to vote."
+msgstr ""
+
+#: src/Form.php:44
+#: src/Form.php:121
+msgid "The voting period is over."
+msgstr ""
+
+#: src/Form.php:51
+#: src/Form.php:140
+msgid "You need an invitation in order to vote."
+msgstr ""
+
+#: src/Form.php:56
+msgid "Votes are anonymous."
+msgstr ""
+
+#: src/Form.php:60
+msgid "Voting is possible until: %s."
+msgstr ""
+
+#: src/Form.php:92
+msgid "Submit"
+msgstr ""
+
+#: src/Form.php:126
+msgid "Invalid user."
+msgstr ""
+
+#: src/Form.php:134
+msgid "You cannot vote for someone else."
+msgstr ""
+
+#: src/Form.php:146
+msgid "Your votes have been saved."
+msgstr ""
+
+#: src/Helpers.php:82
+msgid "yes"
+msgstr ""
+
+#: src/Helpers.php:82
+msgid "no"
+msgstr ""
+
+#: src/Invitees.php:30
+#: src/PostTypes.php:74
+msgid "No invitees found."
+msgstr ""
+
+#: src/Invitees.php:34
+msgid "List of users who can vote:"
+msgstr ""
+
+#: src/Notifications.php:63
+msgid "You are invited for poll: %s"
+msgstr ""
+
+#: src/Notifications.php:69
+msgid "You are invited for poll"
+msgstr ""
+
+#: src/Notifications.php:70
+msgid "Click the link to vote."
+msgstr ""
+
+#: src/PostTypes.php:22
+msgctxt "Post type general name"
+msgid "Polls"
+msgstr ""
+
+#: src/PostTypes.php:23
+msgctxt "Post type singular name"
+msgid "Poll"
+msgstr ""
+
+#: src/PostTypes.php:24
+msgctxt "Admin Menu text"
+msgid "Polls"
+msgstr ""
+
+#: src/PostTypes.php:25
+msgctxt "Add New on Toolbar"
+msgid "Poll"
+msgstr ""
+
+#: src/PostTypes.php:26
+#: src/PostTypes.php:66
+#: src/PostTypes.php:106
+#: src/PostTypes.php:146
+msgid "Add New"
+msgstr ""
+
+#: src/PostTypes.php:27
+msgid "Add New Poll"
+msgstr ""
+
+#: src/PostTypes.php:28
+msgid "New Poll"
+msgstr ""
+
+#: src/PostTypes.php:29
+msgid "Edit Poll"
+msgstr ""
+
+#: src/PostTypes.php:30
+msgid "View Poll"
+msgstr ""
+
+#: src/PostTypes.php:31
+msgid "Polls"
+msgstr ""
+
+#: src/PostTypes.php:32
+msgid "Search Polls"
+msgstr ""
+
+#: src/PostTypes.php:33
+msgid "Parent Polls:"
+msgstr ""
+
+#: src/PostTypes.php:34
+msgid "No polls found."
+msgstr ""
+
+#: src/PostTypes.php:35
+msgid "No polls found in Trash."
+msgstr ""
+
+#: src/PostTypes.php:36
+msgctxt "Overrides the “Featured Image” phrase for this post type. Added in 4.3"
+msgid "Poll Cover Image"
+msgstr ""
+
+#: src/PostTypes.php:37
+#: src/PostTypes.php:77
+#: src/PostTypes.php:117
+#: src/PostTypes.php:157
+msgctxt "Overrides the “Set featured image” phrase for this post type. Added in 4.3"
+msgid "Set cover image"
+msgstr ""
+
+#: src/PostTypes.php:38
+#: src/PostTypes.php:78
+#: src/PostTypes.php:118
+#: src/PostTypes.php:158
+msgctxt "Overrides the “Remove featured image” phrase for this post type. Added in 4.3"
+msgid "Remove cover image"
+msgstr ""
+
+#: src/PostTypes.php:39
+#: src/PostTypes.php:79
+#: src/PostTypes.php:119
+#: src/PostTypes.php:159
+msgctxt "Overrides the “Use as featured image” phrase for this post type. Added in 4.3"
+msgid "Use as cover image"
+msgstr ""
+
+#: src/PostTypes.php:40
+msgctxt "The post type archive label used in nav menus. Default “Post Archives”. Added in 4.4"
+msgid "Poll archives"
+msgstr ""
+
+#: src/PostTypes.php:41
+msgctxt "Overrides the “Insert into post”/”Insert into page” phrase (used when inserting media into a post). Added in 4.4"
+msgid "Insert into poll"
+msgstr ""
+
+#: src/PostTypes.php:42
+msgctxt "Overrides the “Uploaded to this post”/”Uploaded to this page” phrase (used when viewing media attached to a post). Added in 4.4"
+msgid "Uploaded to this poll"
+msgstr ""
+
+#: src/PostTypes.php:43
+msgctxt "Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4"
+msgid "Filter polls list"
+msgstr ""
+
+#: src/PostTypes.php:44
+msgctxt "Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4"
+msgid "Polls list navigation"
+msgstr ""
+
+#: src/PostTypes.php:45
+msgctxt "Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4"
+msgid "Polls list"
+msgstr ""
+
+#: src/PostTypes.php:62
+msgctxt "Post type general name"
+msgid "Invitees"
+msgstr ""
+
+#: src/PostTypes.php:63
+msgctxt "Post type singular name"
+msgid "Invitee"
+msgstr ""
+
+#: src/PostTypes.php:64
+msgctxt "Admin Menu text"
+msgid "Invitees"
+msgstr ""
+
+#: src/PostTypes.php:65
+msgctxt "Add New on Toolbar"
+msgid "Invitee"
+msgstr ""
+
+#: src/PostTypes.php:67
+msgid "Add New Invitee"
+msgstr ""
+
+#: src/PostTypes.php:68
+msgid "New Invitee"
+msgstr ""
+
+#: src/PostTypes.php:69
+msgid "Edit Invitee"
+msgstr ""
+
+#: src/PostTypes.php:70
+msgid "View Invitee"
+msgstr ""
+
+#: src/PostTypes.php:72
+msgid "Search Invitees"
+msgstr ""
+
+#: src/PostTypes.php:73
+msgid "Parent Invitees:"
+msgstr ""
+
+#: src/PostTypes.php:75
+msgid "No invitees found in Trash."
+msgstr ""
+
+#: src/PostTypes.php:76
+msgctxt "Overrides the “Featured Image” phrase for this post type. Added in 4.3"
+msgid "Invitee Cover Image"
+msgstr ""
+
+#: src/PostTypes.php:80
+msgctxt "The post type archive label used in nav menus. Default “Post Archives”. Added in 4.4"
+msgid "Invitee archives"
+msgstr ""
+
+#: src/PostTypes.php:81
+msgctxt "Overrides the “Insert into post”/”Insert into page” phrase (used when inserting media into a post). Added in 4.4"
+msgid "Insert into invitee"
+msgstr ""
+
+#: src/PostTypes.php:82
+msgctxt "Overrides the “Uploaded to this post”/”Uploaded to this page” phrase (used when viewing media attached to a post). Added in 4.4"
+msgid "Uploaded to this invitee"
+msgstr ""
+
+#: src/PostTypes.php:83
+msgctxt "Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4"
+msgid "Filter invitees list"
+msgstr ""
+
+#: src/PostTypes.php:84
+msgctxt "Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4"
+msgid "Invitees list navigation"
+msgstr ""
+
+#: src/PostTypes.php:85
+msgctxt "Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4"
+msgid "Invitees list"
+msgstr ""
+
+#: src/PostTypes.php:102
+msgctxt "Post type general name"
+msgid "Items"
+msgstr ""
+
+#: src/PostTypes.php:103
+msgctxt "Post type singular name"
+msgid "Item"
+msgstr ""
+
+#: src/PostTypes.php:104
+msgctxt "Admin Menu text"
+msgid "Items"
+msgstr ""
+
+#: src/PostTypes.php:105
+msgctxt "Add New on Toolbar"
+msgid "Item"
+msgstr ""
+
+#: src/PostTypes.php:107
+msgid "Add New Item"
+msgstr ""
+
+#: src/PostTypes.php:108
+msgid "New Item"
+msgstr ""
+
+#: src/PostTypes.php:109
+msgid "Edit Item"
+msgstr ""
+
+#: src/PostTypes.php:110
+msgid "View Item"
+msgstr ""
+
+#: src/PostTypes.php:112
+msgid "Search Items"
+msgstr ""
+
+#: src/PostTypes.php:113
+msgid "Parent Items:"
+msgstr ""
+
+#: src/PostTypes.php:114
+#: src/Result.php:64
+msgid "No items found."
+msgstr ""
+
+#: src/PostTypes.php:115
+msgid "No items found in Trash."
+msgstr ""
+
+#: src/PostTypes.php:116
+msgctxt "Overrides the “Featured Image” phrase for this post type. Added in 4.3"
+msgid "Item Cover Image"
+msgstr ""
+
+#: src/PostTypes.php:120
+msgctxt "The post type archive label used in nav menus. Default “Post Archives”. Added in 4.4"
+msgid "Item archives"
+msgstr ""
+
+#: src/PostTypes.php:121
+msgctxt "Overrides the “Insert into post”/”Insert into page” phrase (used when inserting media into a post). Added in 4.4"
+msgid "Insert into item"
+msgstr ""
+
+#: src/PostTypes.php:122
+msgctxt "Overrides the “Uploaded to this post”/”Uploaded to this page” phrase (used when viewing media attached to a post). Added in 4.4"
+msgid "Uploaded to this item"
+msgstr ""
+
+#: src/PostTypes.php:123
+msgctxt "Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4"
+msgid "Filter items list"
+msgstr ""
+
+#: src/PostTypes.php:124
+msgctxt "Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4"
+msgid "Items list navigation"
+msgstr ""
+
+#: src/PostTypes.php:125
+msgctxt "Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4"
+msgid "Items list"
+msgstr ""
+
+#: src/PostTypes.php:142
+msgctxt "Post type general name"
+msgid "Votes"
+msgstr ""
+
+#: src/PostTypes.php:143
+msgctxt "Post type singular name"
+msgid "Vote"
+msgstr ""
+
+#: src/PostTypes.php:144
+msgctxt "Admin Menu text"
+msgid "Votes"
+msgstr ""
+
+#: src/PostTypes.php:145
+msgctxt "Add New on Toolbar"
+msgid "Vote"
+msgstr ""
+
+#: src/PostTypes.php:147
+msgid "Add New Vote"
+msgstr ""
+
+#: src/PostTypes.php:148
+msgid "New Vote"
+msgstr ""
+
+#: src/PostTypes.php:149
+msgid "Edit Vote"
+msgstr ""
+
+#: src/PostTypes.php:150
+msgid "View Vote"
+msgstr ""
+
+#: src/PostTypes.php:151
+msgid "Votes"
+msgstr ""
+
+#: src/PostTypes.php:152
+msgid "Search Votes"
+msgstr ""
+
+#: src/PostTypes.php:153
+msgid "Parent Votes:"
+msgstr ""
+
+#: src/PostTypes.php:154
+msgid "No votes found."
+msgstr ""
+
+#: src/PostTypes.php:155
+msgid "No votes found in Trash."
+msgstr ""
+
+#: src/PostTypes.php:156
+msgctxt "Overrides the “Featured Image” phrase for this post type. Added in 4.3"
+msgid "Vote Cover Image"
+msgstr ""
+
+#: src/PostTypes.php:160
+msgctxt "The post type archive label used in nav menus. Default “Post Archives”. Added in 4.4"
+msgid "Vote archives"
+msgstr ""
+
+#: src/PostTypes.php:161
+msgctxt "Overrides the “Insert into post”/”Insert into page” phrase (used when inserting media into a post). Added in 4.4"
+msgid "Insert into vote"
+msgstr ""
+
+#: src/PostTypes.php:162
+msgctxt "Overrides the “Uploaded to this post”/”Uploaded to this page” phrase (used when viewing media attached to a post). Added in 4.4"
+msgid "Uploaded to this vote"
+msgstr ""
+
+#: src/PostTypes.php:163
+msgctxt "Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4"
+msgid "Filter votes list"
+msgstr ""
+
+#: src/PostTypes.php:164
+msgctxt "Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4"
+msgid "Votes list navigation"
+msgstr ""
+
+#: src/PostTypes.php:165
+msgctxt "Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4"
+msgid "Votes list"
+msgstr ""
+
+#: src/Result.php:19
+msgid "Result"
+msgstr ""
+
+#: src/Result.php:20
+msgid "Chart"
+msgstr ""
+
+#: src/Result.php:88
+msgid "vote"
+msgid_plural "votes"
+msgstr[0] ""
+msgstr[1] ""
