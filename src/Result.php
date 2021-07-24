@@ -82,11 +82,24 @@ class Result
         foreach ($result as $item_id => $votes) {
             $item = new Item($item_id);
             printf(
-                '<li><strong>%1$s</strong> (%2$d %3$s)</li>',
+                '<li><strong>%1$s</strong> (%2$d %3$s)',
                 esc_html($item->getContent()),
                 $votes,
                 esc_html(_n('vote', 'votes', $votes, 'my-polls'))
             );
+
+            if (! $poll->areVotesAnonymous()) {
+                $users = $poll->getVoteUsers($item_id, [
+                    'orderby' => 'display_name',
+                    'order'   => 'ASC',
+                ]);
+
+                if ($users) {
+                    printf('<p>%s</p>', Helpers::renderUsers($users));
+                }
+            }
+
+            echo '</li>';
         }
 
         echo '</ol>';

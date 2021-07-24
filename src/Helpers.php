@@ -14,15 +14,15 @@ class Helpers
         );
     }
 
-    public static function alert($message, $type = 'info', $return = false)
+    public static function alert($message, $type = 'info', $echo = true)
     {
         $return = sprintf(
             '<div class="alert alert-%1$s" role="alert">%2$s</div>',
             sanitize_html_class($type),
-            esc_html($message),
+            esc_html($message)
         );
 
-        if (! $return) {
+        if ($echo) {
             echo $return;
         }
 
@@ -51,13 +51,17 @@ class Helpers
         $return = [];
 
         foreach ((array) $user_ids as $user_id) {
-            $user = get_userdata($user_id);
+            $user = is_a($user_id, 'WP_User') ? $user_id : get_userdata($user_id);
             if ($user) {
-                $return[] = sprintf(
-                    '<a href="%1$s">%2$s</a>',
-                    esc_url(get_edit_user_link($user->ID)),
-                    esc_html($user->display_name)
-                );
+                if (current_user_can('edit_users')) {
+                    $return[] = sprintf(
+                        '<a href="%1$s">%2$s</a>',
+                        esc_url(get_edit_user_link($user->ID)),
+                        esc_html($user->display_name)
+                    );
+                } else {
+                    $return[] = esc_html($user->display_name);
+                }
             }
         }
 

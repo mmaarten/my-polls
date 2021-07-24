@@ -13,15 +13,17 @@ class Fields
         add_action('acf/init', [__CLASS__, 'addInviteeFields']);
         add_action('acf/init', [__CLASS__, 'addItemFields']);
         add_action('acf/init', [__CLASS__, 'addVoteFields']);
-        
+
         add_filter('acf/settings/l10n_textdomain', function ($return) {
 
             $post_types = ['poll', 'poll_invitee', 'poll_item', 'poll_vote'];
 
-            $screen = get_current_screen();
+            if (is_admin() && function_exists('get_current_screen')) {
+                $screen = get_current_screen();
 
-            if ($screen && in_array($screen->id, $post_types)) {
-                return 'my-polls';
+                if ($screen && in_array($screen->id, $post_types)) {
+                    return 'my-polls';
+                }
             }
 
             return $return;
@@ -52,7 +54,7 @@ class Fields
         acf_add_local_field([
             'key'           => 'my_polls_poll_description_field',
             'label'         => __('Description', 'my-polls'),
-            'instructions'  => __('', 'my-polls'),
+            'instructions'  => __('A brief description about this poll.', 'my-polls'),
             'name'          => 'description',
             'type'          => 'textarea',
             'rows'          => 4,
@@ -61,26 +63,11 @@ class Fields
             'parent'        => 'my_polls_poll_group',
         ]);
 
-        // End date
-        acf_add_local_field([
-            'key'           => 'my_polls_poll_end_date_field',
-            'label'         => __('End date', 'my-polls'),
-            'instructions'  => __('', 'my-polls'),
-            'name'          => 'end_date',
-            'type'           => 'date_time_picker',
-            'display_format' => get_option('date_format'),
-            'return_format'  => 'Y-m-d',
-            'first_day'      => get_option('start_of_week', 0),
-            'default_value'  => '',
-            'required'       => false,
-            'parent'        => 'my_polls_poll_group',
-        ]);
-
         // Invitees
         acf_add_local_field([
             'key'           => 'my_polls_poll_invitees_field',
             'label'         => __('Invitees', 'my-polls'),
-            'instructions'  => __('', 'my-polls'),
+            'instructions'  => __('A list of users you would like to invite.', 'my-polls'),
             'name'          => 'invitees',
             'type'          => 'user',
             'return_format' => 'id',
@@ -126,18 +113,33 @@ class Fields
         acf_add_local_field([
             'key'           => 'my_polls_poll_items_color_field',
             'label'         => __('Color', 'my-polls'),
-            'instructions'  => __('', 'my-polls'),
+            'instructions'  => __('The color for the chart.', 'my-polls'),
             'name'          => 'color',
             'type'          => 'color_picker',
             'required'      => true,
             'parent'        => 'my_polls_poll_items_field',
         ]);
 
+        // End date
+        acf_add_local_field([
+            'key'           => 'my_polls_poll_end_date_field',
+            'label'         => __('End date', 'my-polls'),
+            'instructions'  => __('The date the voting ends', 'my-polls'),
+            'name'          => 'end_date',
+            'type'           => 'date_time_picker',
+            'display_format' => get_option('date_format'),
+            'return_format'  => 'Y-m-d',
+            'first_day'      => get_option('start_of_week', 0),
+            'default_value'  => '',
+            'required'       => false,
+            'parent'        => 'my_polls_poll_group',
+        ]);
+
         // Anonymous votes
         acf_add_local_field([
             'key'           => 'my_polls_poll_anonymous_votes_field',
-            'label'         => __('Anonymous votes', 'my-polls'),
-            'instructions'  => __('', 'my-polls'),
+            'label'         => __('Anonymous voting', 'my-polls'),
+            'instructions'  => __('Users will not be displayed in the results.', 'my-polls'),
             'name'          => 'anonymous_votes',
             'type'          => 'true_false',
             'default_value' => false,

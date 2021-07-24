@@ -52,6 +52,14 @@ class Form
             return;
         }
 
+        if ($poll->areVotesAnonymous()) {
+            Helpers::alert(__('Votes are anonymous.', 'my-polls'), 'info');
+        }
+
+        if ($poll->hasEndDate()) {
+            Helpers::alert(sprintf(__('Voting is possible until: %s.', 'my-polls'), $poll->getEndDate()), 'warning');
+        }
+
         ?>
 
         <form id="my-polls-form">

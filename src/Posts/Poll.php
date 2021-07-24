@@ -205,6 +205,28 @@ class Poll extends Post
         ]);
     }
 
+    public function getVoteUsers($item_id, $args = [])
+    {
+        $votes = $this->getVotesByItem($item_id);
+
+        $user_ids = [];
+
+        foreach ($votes as $vote) {
+            $vote = new Vote($vote);
+            $invitee_id = $vote->getInvitee();
+            if ($invitee_id && get_post_type($invitee_id)) {
+                $invitee = new Invitee($invitee_id);
+                $user_ids[] = $invitee->getUser();
+            }
+        }
+
+        if (! $user_ids) {
+            return [];
+        }
+
+        return get_users(['include' => $user_ids] + $args);
+    }
+
     public function getEndDate($format = null)
     {
         $date = $this->getField('end_date');
@@ -227,7 +249,11 @@ class Poll extends Post
 
     public function endDateReached()
     {
-        return $this->hasEndDate() && $this->getEndDate('U') <= time();
+        if (! $this->hasEndDate()) {
+            return false;
+        }
+
+        return strtotime($this->getEndDate('Y-m-d') . ' 23:59:59') < time();
     }
 
     public function areVotesAnonymous()

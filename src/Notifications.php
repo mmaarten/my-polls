@@ -41,8 +41,11 @@ class Notifications
             $invitee = new Invitee($invitee);
             $poll_id = $invitee->getPoll();
             if ($poll_id && get_post_type($poll_id) && get_post_status($poll_id) == 'publish') {
-                self::sendInvitation($invitee, $invitee->getUser(), new Poll($poll_id));
-                $invitee->setInvitationSent(true);
+                $poll = new Poll($poll_id);
+                if (! $poll->endDateReached()) {
+                    self::sendInvitation($invitee, $invitee->getUser(), $poll);
+                    $invitee->setInvitationSent(true);
+                }
             }
         }
     }
