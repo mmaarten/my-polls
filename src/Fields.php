@@ -63,17 +63,38 @@ class Fields
             'parent'        => 'my_polls_poll_group',
         ]);
 
+        // Anyone can vote
+        acf_add_local_field([
+            'key'           => 'my_polls_poll_anyone_can_vote_field',
+            'label'         => __('Anyone can vote', 'my-polls'),
+            'instructions'  => __('', 'my-polls'),
+            'name'          => 'anyone_can_vote',
+            'type'          => 'true_false',
+            'default_value' => true,
+            'required'      => false,
+            'parent'        => 'my_polls_poll_group',
+        ]);
+
         // Invitees
         acf_add_local_field([
             'key'           => 'my_polls_poll_invitees_field',
             'label'         => __('Invitees', 'my-polls'),
-            'instructions'  => __('A list of users you would like to invite.', 'my-polls'),
+            'instructions'  => __('A list of users who are able to vote.', 'my-polls'),
             'name'          => 'invitees',
             'type'          => 'user',
             'return_format' => 'id',
             'multiple'      => true,
             'required'      => true,
             'parent'        => 'my_polls_poll_group',
+            'conditional_logic' => [
+                [
+                    [
+                        'field'    => 'my_polls_poll_anyone_can_vote_field',
+                        'operator' => '==',
+                        'value'    => false
+                    ],
+                ],
+            ],
         ]);
 
         // Items

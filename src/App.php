@@ -23,6 +23,7 @@ class App
             'AdminColumns',
             'Form',
             'Result',
+            'Invitees',
             'Notifications',
         ]);
 
@@ -30,6 +31,7 @@ class App
         add_action('acf/save_post', [__CLASS__, 'savePost']);
         add_action('wp_trash_post', [__CLASS__, 'trashPost']);
         add_action('before_delete_post', [__CLASS__, 'deletePost']);
+        add_action('user_register', [__CLASS__, 'userRegister']);
         add_action('delete_user', [__CLASS__, 'deleteUser']);
         add_action('admin_enqueue_scripts', [__CLASS__, 'adminEnqueueAssets']);
 
@@ -55,9 +57,15 @@ class App
         switch (get_post_type($post_id)) {
             case 'poll':
                 $poll = new Poll($post_id);
-                
+
+                if ($poll->getField('anyone_can_vote')) {
+                    $invitees = get_users(['fields' => 'ID']);
+                } else {
+                    $invitees = $poll->getField('invitees', false);
+                }
+
                 // Invitees
-                $invitees = $poll->getField('invitees', false);
+
                 $poll->setInvitees($invitees);
                 $poll->deleteField('invitees');
 
@@ -108,6 +116,30 @@ class App
                     wp_delete_post($vote_id, true);
                 }
                 break;
+        }
+    }
+
+    /**
+     * User register
+     *
+     * @param int $user_id
+     */
+    public static function userRegister($user_id)
+    {
+        $polls = get_posts([
+            'post_type'    => 'poll',
+            'post_status'  => 'publish',
+            'numberposts'  => 999,
+            'meta_key'     => 'anyone_can_vote',
+            'meta_compare' => '=',
+            'meta_value'   => true,
+        ]);
+
+        foreach ($polls as $poll) {
+            $poll = new Poll($poll);
+            if (! $poll->endDateReached()) {
+                $poll->addInvitee($user_id);
+            }
         }
     }
 
