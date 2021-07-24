@@ -112,38 +112,38 @@ class Form
         $items   = isset($_POST['items']) && is_array($_POST['items']) ? $_POST['items'] : [];
 
         if (! $poll_id || get_post_type($poll_id) != 'poll') {
-            wp_send_json(Helpers::alert(__('Invalid poll.', 'my-polls'), 'danger', true));
+            wp_send_json(Helpers::alert(__('Invalid poll.', 'my-polls'), 'danger', false));
         }
 
         $poll = new Poll($poll_id);
 
         if ($poll->endDateReached()) {
-            wp_send_json(Helpers::alert(__('The voting period is over.', 'my-polls'), 'danger', true));
+            wp_send_json(Helpers::alert(__('The voting period is over.', 'my-polls'), 'danger', false));
             return;
         }
 
         if (! $user_id || ! get_userdata($user_id)) {
-            wp_send_json(Helpers::alert(__('Invalid user.', 'my-polls'), 'danger', true));
+            wp_send_json(Helpers::alert(__('Invalid user.', 'my-polls'), 'danger', false));
         }
 
         if (! is_user_logged_in()) {
-            wp_send_json(Helpers::alert(__('You need to login in order to vote.', 'my-polls'), 'danger', true));
+            wp_send_json(Helpers::alert(__('You need to login in order to vote.', 'my-polls'), 'danger', false));
         }
 
         if (get_current_user_id() != $user_id) {
-            wp_send_json(Helpers::alert(__('You cannot vote for someone else.', 'my-polls'), 'danger', true));
+            wp_send_json(Helpers::alert(__('You cannot vote for someone else.', 'my-polls'), 'danger', false));
         }
 
         $invitee = $poll->getInviteeByUser($user_id);
 
         if (! $invitee) {
-            wp_send_json(Helpers::alert(__('You need an invitation in order to vote.', 'my-polls'), 'danger', true));
+            wp_send_json(Helpers::alert(__('You need an invitation in order to vote.', 'my-polls'), 'danger', false));
             return;
         }
 
         $invitee->setVotes($items);
 
-        wp_send_json(Helpers::alert(__('Your votes have been saved.', 'my-polls'), 'success', true));
+        wp_send_json(Helpers::alert(__('Your votes have been saved.', 'my-polls'), 'success', false));
     }
 
     public static function enqueueAssets()

@@ -101,10 +101,11 @@ class Result
             $item = new Item($item_id);
             $count = count($users);
             printf(
-                '<li><strong>%1$s</strong> (%2$d %3$s)',
+                '<li><strong style="color:%4$s;">%1$s</strong> (%2$d %3$s)',
                 esc_html($item->getContent()),
                 $count,
-                esc_html(_n('vote', 'votes', $count, 'my-polls'))
+                esc_html(_n('vote', 'votes', $count, 'my-polls')),
+                esc_attr($item->getColor())
             );
 
             if (! $poll->areVotesAnonymous()) {
