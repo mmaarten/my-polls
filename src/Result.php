@@ -95,17 +95,18 @@ class Result
 
         $result = array_reverse($result, true);
 
-        echo '<ol>';
+        echo '<ol class="my-polls-result">';
 
         foreach ($result as $item_id => $users) {
             $item = new Item($item_id);
             $count = count($users);
             printf(
-                '<li><strong style="color:%4$s;">%1$s</strong> (%2$d %3$s)',
+                '<li><strong style="background-color:%4$s; color: %5$s;">%1$s</strong> (%2$d %3$s)',
                 esc_html($item->getContent()),
                 $count,
                 esc_html(_n('vote', 'votes', $count, 'my-polls')),
-                esc_attr($item->getColor())
+                esc_attr($item->getColor()),
+                esc_attr(Helpers::yig($item->getColor()))
             );
 
             if (! $poll->areVotesAnonymous()) {
@@ -122,19 +123,27 @@ class Result
 
     public static function enqueueAssets()
     {
-        wp_register_script('my-polls-result-script', plugins_url('build/result.js', MY_POLLS_PLUGIN_FILE), ['jquery'], false, true);
+        wp_register_script('my-polls-result-script', plugins_url('build/result-script.js', MY_POLLS_PLUGIN_FILE), ['jquery'], false, true);
+        wp_register_style('my-polls-result-style', plugins_url('build/result-style.css', MY_POLLS_PLUGIN_FILE));
 
         wp_localize_script('my-polls-result-script', 'MyPolls', [
             'ajaxurl' => admin_url('admin-ajax.php'),
         ]);
 
+        $enqueue = false;
+
         if (is_admin()) {
             $screen = get_current_screen();
             if ($screen->id == 'poll') {
-                wp_enqueue_script('my-polls-result-script');
+                $enqueue = true;
             }
         } elseif (is_singular('poll')) {
+            $enqueue = true;
+        }
+
+        if ($enqueue) {
             wp_enqueue_script('my-polls-result-script');
+            wp_enqueue_style('my-polls-result-style');
         }
     }
 }

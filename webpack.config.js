@@ -5,7 +5,8 @@ module.exports = {
 	...defaultConfig,
 	entry : {
     'admin-style': './assets/styles/admin.scss',
-    'result': './assets/scripts/result.js',
+    'result-script': './assets/scripts/result.js',
+    'result-style': './assets/styles/result.scss',
     'form': './assets/scripts/form.js',
   },
   plugins : [
